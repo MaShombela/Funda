@@ -26,9 +26,10 @@ def create_app():
         PERMANENT_SESSION_LIFETIME=int(os.getenv('SESSION_LIFETIME', 3600)),
         MAX_CONTENT_LENGTH=16 * 1024 * 1024,  # 16MB max file size
         UPLOAD_FOLDER=os.path.join(app.root_path, 'static', 'uploads')
-        db.init_app(app)
-        Migrate(app,)
     )
+    db.init_app(app)
+    migrate.init_app(app, db)
+    
     
     # Ensure upload folder exists
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
