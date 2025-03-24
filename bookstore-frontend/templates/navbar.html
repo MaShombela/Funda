@@ -1,0 +1,54 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('main.index') }}">
+            <i class="fas fa-book"></i> FundaHub
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.book_list') }}">Browse Books</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="d-flex">
+                {% if current_user.is_authenticated %}
+                    <div class="dropdown me-3">
+                        <button class="btn btn-link nav-link dropdown-toggle" type="button" id="notificationsDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge bg-danger notification-badge" style="display: none;">0</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><h6 class="dropdown-header">Notifications</h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.notifications') }}">View All</a></li>
+                        </ul>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-link nav-link dropdown-toggle" type="button" id="userDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i> {{ current_user.name }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}">Profile</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.user_dashboard') }}">Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.logout') }}">Logout</a></li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="{{ url_for('main.signup') }}" class="btn btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>

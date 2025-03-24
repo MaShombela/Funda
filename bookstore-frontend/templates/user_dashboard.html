@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard - FundaHub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- User Profile Card -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <img src="{{ current_user.profile_picture or url_for('static', filename='images/default-avatar.png') }}" 
+                         class="rounded-circle mb-3" 
+                         alt="Profile Picture"
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                    <h5 class="card-title">{{ current_user.name }}</h5>
+                    <p class="card-text text-muted">{{ current_user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="col-md-9">
+            <!-- Navigation Tabs -->
+            <ul class="nav nav-tabs mb-4" id="dashboardTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="listings-tab" data-bs-toggle="tab" href="#listings" role="tab">
+                        My Listings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="purchases-tab" data-bs-toggle="tab" href="#purchases" role="tab">
+                        My Purchases
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="favorites-tab" data-bs-toggle="tab" href="#favorites" role="tab">
+                        Favorites
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="dashboardTabContent">
+                <!-- Listings Tab -->
+                <div class="tab-pane fade show active" id="listings" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>My Listed Books</h4>
+                        <a href="{{ url_for('main.add_book') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> List New Book
+                        </a>
+                    </div>
+                    <div class="row">
+                        {% for book in selling_books %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ book.image_url or url_for('static', filename='images/default-book.png') }}" 
+                                     class="card-img-top" 
+                                     alt="{{ book.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ book.title }}</h5>
+                                    <p class="card-text">{{ book.author }}</p>
+                                    <p class="card-text"><strong>R{{ "%.2f"|format(book.price) }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Purchases Tab -->
+                <div class="tab-pane fade" id="purchases" role="tabpanel">
+                    <h4 class="mb-3">Books I've Purchased</h4>
+                    <div class="row">
+                        {% for transaction in purchases %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ transaction.book.image_url or url_for('static', filename='images/default-book.png') }}" 
+                                     class="card-img-top" 
+                                     alt="{{ transaction.book.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ transaction.book.title }}</h5>
+                                    <p class="card-text">{{ transaction.book.author }}</p>
+                                    <p class="card-text"><small class="text-muted">Purchased on {{ transaction.created_at.strftime('%Y-%m-%d') }}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Favorites Tab -->
+                <div class="tab-pane fade" id="favorites" role="tabpanel">
+                    <h4 class="mb-3">My Favorite Books</h4>
+                    <div class="row">
+                        {% for book in favorite_books %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <img src="{{ book.image_url or url_for('static', filename='images/default-book.png') }}" 
+                                     class="card-img-top" 
+                                     alt="{{ book.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ book.title }}</h5>
+                                    <p class="card-text">{{ book.author }}</p>
+                                    <p class="card-text"><strong>R{{ "%.2f"|format(book.price) }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
