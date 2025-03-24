@@ -1,3 +1,154 @@
+<<<<<<< HEAD
+{% extends "base.html" %}
+{% block title %}Browse Books - FundaHub{% endblock %}
+{% block content %}
+<div class="container">
+    {% if search_query %}
+    <h2 class="mb-4">Search Results for "{{ search_query }}"</h2>
+    {% if not books %}
+    <div class="alert alert-info">No books found matching your search.</div>
+    {% endif %}
+    {% else %}
+    <h2 class="mb-4">Browse Books</h2>
+    {% endif %}
+
+    <div class="books-grid" id="booksContainer">
+        {% for book in books %}
+        <!-- Your existing book card code -->
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // View toggle functionality
+    const gridView = document.getElementById('gridView');
+    const listView = document.getElementById('listView');
+    const booksContainer = document.getElementById('booksContainer');
+
+    gridView.addEventListener('click', () => {
+        booksContainer.classList.remove('books-list');
+        booksContainer.classList.add('books-grid');
+        gridView.classList.add('active');
+        listView.classList.remove('active');
+    });
+
+    listView.addEventListener('click', () => {
+        booksContainer.classList.remove('books-grid');
+        booksContainer.classList.add('books-list');
+        listView.classList.add('active');
+        gridView.classList.remove('active');
+    });
+
+    // Filter form handling
+    const filterForm = document.getElementById('filterForm');
+    filterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const filters = {
+            minPrice: document.getElementById('minPrice').value,
+            maxPrice: document.getElementById('maxPrice').value,
+            condition: document.getElementById('condition').value,
+            category: document.getElementById('category').value
+        };
+        
+        try {
+            const response = await fetch(`/api/books/filter?${new URLSearchParams(filters)}`);
+            const books = await response.json();
+            updateBooksDisplay(books);
+        } catch (error) {
+            console.error('Error filtering books:', error);
+        }
+    });
+
+    // Favorite functionality
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const bookId = btn.dataset.bookId;
+            try {
+                const response = await fetch(`/api/favorites/${bookId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const isFavorited = btn.dataset.favorited === 'true';
+                    btn.dataset.favorited = (!isFavorited).toString();
+                    btn.classList.toggle('btn-outline-primary');
+                    btn.classList.toggle('btn-primary');
+                }
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+            }
+        });
+    });
+});
+
+function updateBooksDisplay(books) {
+    const container = document.getElementById('booksContainer');
+    container.innerHTML = books.map(book => `
+        <div class="book-card card h-100">
+            <div class="position-relative">
+                <img src="${book.image_url || '/static/images/default-book.jpg'}" 
+                     class="card-img-top" alt="${book.title}">
+                <span class="condition-badge condition-${book.condition.toLowerCase()}">
+                    ${book.condition}
+                </span>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">${book.title}</h5>
+                <p class="card-text text-muted">${book.author}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="price-tag">R${book.price.toFixed(2)}</span>
+                    <button class="btn btn-sm btn-outline-primary favorite-btn" 
+                            data-book-id="${book.id}"
+                            data-favorited="${book.is_favorited}">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-grid">
+                    <a href="/book/${book.id}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+    `).join('');
+
+    // Reattach event listeners for the newly created elements
+    attachFavoriteHandlers();
+}
+
+function attachFavoriteHandlers() {
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const bookId = btn.dataset.bookId;
+            try {
+                const response = await fetch(`/api/favorites/${bookId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    const isFavorited = btn.dataset.favorited === 'true';
+                    btn.dataset.favorited = (!isFavorited).toString();
+                    btn.classList.toggle('btn-outline-primary');
+                    btn.classList.toggle('btn-primary');
+                }
+            } catch (error) {
+                console.error('Error toggling favorite:', error);
+            }
+        });
+    });
+}
+</script>
+{% endblock %}
+=======
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,3 +184,4 @@
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 </body>
 </html>
+>>>>>>> 1149bd4c3884609ee38d7a174502bbf3271f82b9

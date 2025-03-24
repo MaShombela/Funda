@@ -1,3 +1,115 @@
+<<<<<<< HEAD
+{% extends "base.html" %}
+{% block title %}Contact - FundaHub{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="mb-4">Contact Us</h1>
+            <div class="card">
+                <div class="card-body">
+                    <form id="contactForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <select class="form-select" id="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="support">Technical Support</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="report">Report an Issue</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Contact Information</h2>
+                    <div class="mb-4">
+                        <h3 class="h5">Email</h3>
+                        <p><i class="fas fa-envelope me-2"></i>support@fundahub.com</p>
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="h5">Phone</h3>
+                        <p><i class="fas fa-phone me-2"></i>(+27) 123-456-789</p>
+                    </div>
+                    <div class="mb-4">
+                        <h3 class="h5">Address</h3>
+                        <p><i class="fas fa-map-marker-alt me-2"></i>123 University Ave<br>City, Province 0000</p>
+                    </div>
+                    <div>
+                        <h3 class="h5">Operating Hours</h3>
+                        <p><i class="fas fa-clock me-2"></i>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Follow Us</h2>
+                    <div class="d-flex justify-content-around">
+                        <a href="#" class="text-primary"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#" class="text-info"><i class="fab fa-twitter fa-2x"></i></a>
+                        <a href="#" class="text-danger"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#" class="text-primary"><i class="fab fa-linkedin fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+    };
+
+    try {
+        const response = await fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            alert('Message sent successfully!');
+            e.target.reset();
+        } else {
+            alert('Failed to send message. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error sending message:', error);
+        alert('An error occurred. Please try again later.');
+    }
+});
+</script>
+{% endblock %}
+=======
 {% extends "base.html" %}
 {% block title %}Contact{% endblock %}
 {% block content %}
@@ -49,4 +161,5 @@
         </div>
     </div>
 </footer>
+>>>>>>> 1149bd4c3884609ee38d7a174502bbf3271f82b9
 {% endblock %}

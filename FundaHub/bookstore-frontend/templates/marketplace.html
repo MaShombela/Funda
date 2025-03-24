@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Filters</h5>
+                </div>
+                <div class="card-body">
+                    <form id="filterForm">
+                        <div class="mb-3">
+                            <label class="form-label">Price Range</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="minPrice" placeholder="Min">
+                                <input type="number" class="form-control" name="maxPrice" placeholder="Max">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" name="category">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category[0] }}">{{ category[0] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Condition</label>
+                            <select class="form-select" name="condition">
+                                <option value="">Any Condition</option>
+                                <option value="New">New</option>
+                                <option value="Like New">Like New</option>
+                                <option value="Very Good">Very Good</option>
+                                <option value="Good">Good</option>
+                                <option value="Acceptable">Acceptable</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search books...">
+                    <button class="btn btn-primary" onclick="searchBooks()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+            <div id="booksContainer" class="book-grid">
+                {% for book in books %}
+                    {% include 'partials/book_card.html' %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let debounceTimeout;
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => searchBooks(), 300);
+});
+
+document.getElementById('filterForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    searchBooks();
+});
+
+async function searchBooks() {
+    const searchQuery = document.getElementById('searchInput').value;
+    const formData = new FormData(document.getElementById('filterForm'));
+    const params = new URLSearchParams();
+    
+    params.append('query', searchQuery);
+    for (const [key, value] of formData.entries()) {
+        if (value) params.append(key, value);
+    }
+    
+    try {
+        const response = await fetch(`/api/books/search?${params}`);
+        const books = await response.json();
+        updateBookGrid(books);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function updateBookGrid(books) {
+    const container = document.getElementById('booksContainer');
+    container.innerHTML = books.map(book => `
+        <div class="card book-card">
+            <img src="${book.image_url}" class="card-img-top" alt="${book.title}">
+            <div class="price-tag">R${book.price.toFixed(2)}</div>
+            <div class="card-body">
+                <h5 class="card-title">${book.title}</h5>
+                <p class="card-text">${book.author}</p>
+                <p class="card-text"><small class="text-muted">${book.condition}</small></p>
+                <a href="/books/${book.id}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    `).join('');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+<footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>FundaHub</h5>
+                <p class="text-muted">Your One-Stop Student Textbook Marketplace</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.book_list') }}">Browse Books</a></li>
+                    {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('main.profile') }}">My Profile</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('main.login') }}">Login</a></li>
+                    <li><a href="{{ url_for('main.signup') }}">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope"></i> support@fundahub.com</li>
+                    <li><i class="fas fa-phone"></i> +27 123 456 789</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Cape Town, South Africa</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="text-center">
+            <p class="mb-0">&copy; {{ now.year }} FundaHub. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
