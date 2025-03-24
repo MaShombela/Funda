@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ book.image_url }}" class="img-fluid rounded" alt="{{ book.title }}">
+        </div>
+        <div class="col-md-6">
+            <h1>{{ book.title }}</h1>
+            <h4 class="text-muted">by {{ book.author }}</h4>
+            <div class="price-badge my-3">
+                <h2>R{{ "%.2f"|format(book.price) }}</h2>
+            </div>
+            <p class="condition-badge">Condition: {{ book.condition }}</p>
+            <p class="description">{{ book.description }}</p>
+            
+            {% if current_user.id != book.seller_id %}
+                <button class="btn btn-primary btn-lg" 
+                        onclick="initiateTransaction('{{ book.id }}')">
+                    Buy Now
+                </button>
+                <button class="btn btn-outline-primary btn-lg" 
+                        onclick="toggleFavorite('{{ book.id }}')">
+                    <i class="fas fa-heart" id="favoriteIcon"></i> Add to Favorites
+                </button>
+            {% else %}
+                <button class="btn btn-warning" 
+                        onclick="editBook('{{ book.id }}')">
+                    Edit Listing
+                </button>
+                <button class="btn btn-danger" 
+                        onclick="deleteListing('{{ book.id }}')">
+                    Delete Listing
+                </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function initiateTransaction(bookId) {
+    try {
+        const response = await fetch(`/api/transactions/initiate/${bookId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const data = await response.json();
+        if (response.ok) {
+            window.location.href = data.checkout_url;
+        } else {
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to initiate transaction');
+    }
+}
+
+async function toggleFavorite(bookId) {
+    try {
+        const response = await fetch(`/api/favorites/${bookId}`, {
+            method: 'POST'
+        });
+        if (response.ok) {
+            const icon = document.getElementById('favoriteIcon');
+            icon.classList.toggle('text-danger');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function deleteListing(bookId) {
+    if (confirm('Are you sure you want to delete this listing?')) {
+        try {
+            const response = await fetch(`/api/books/${bookId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                window.location.href = '/my-books';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+}
+
+function editBook(bookId) {
+    window.location.href = `/books/${bookId}/edit`;
+}
+</script>
+{% endblock %}

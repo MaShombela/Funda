@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}About - FundaHub{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="mb-4">About FundaHub</h1>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Our Mission</h2>
+                    <p>FundaHub is dedicated to making textbook access easier and more affordable for university students. 
+                    We provide a platform where students can buy and sell their used textbooks directly to other students, 
+                    creating a sustainable and cost-effective marketplace for academic materials.</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">How It Works</h2>
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-book-open fa-3x mb-2 text-primary"></i>
+                            <h3 class="h5">List Your Books</h3>
+                            <p>Upload your textbooks with details and set your price</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-handshake fa-3x mb-2 text-primary"></i>
+                            <h3 class="h5">Connect</h3>
+                            <p>Connect with buyers or sellers on campus</p>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <i class="fas fa-exchange-alt fa-3x mb-2 text-primary"></i>
+                            <h3 class="h5">Exchange</h3>
+                            <p>Meet safely and complete your transaction</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Our Values</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Student-First Approach</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Affordability</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Sustainability</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Community Building</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Trust & Safety</li>
+                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Academic Success</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Quick Stats</h2>
+                    <div class="text-center">
+                        <div class="mb-3">
+                            <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                            <h3 class="h5">1000+ Users</h3>
+                        </div>
+                        <div class="mb-3">
+                            <i class="fas fa-book fa-2x text-primary mb-2"></i>
+                            <h3 class="h5">5000+ Books Listed</h3>
+                        </div>
+                        <div>
+                            <i class="fas fa-university fa-2x text-primary mb-2"></i>
+                            <h3 class="h5">10+ Universities</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="h4 mb-3">Contact Us</h2>
+                    <p><i class="fas fa-envelope me-2"></i>support@fundahub.com</p>
+                    <p><i class="fas fa-phone me-2"></i>(+27) 123-456-789</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>123 University Ave</p>
+                    <a href="{{ url_for('contact') }}" class="btn btn-primary w-100">Get in Touch</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

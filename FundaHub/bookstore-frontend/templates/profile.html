@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ current_user.avatar_url or url_for('static', filename='images/default-avatar.png') }}" 
+                         class="rounded-circle mb-3" style="width: 150px; height: 150px;" alt="Profile Picture">
+                    <h3>{{ current_user.name }}</h3>
+                    <p class="text-muted">Student ID: {{ current_user.student_id }}</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        Edit Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#listings">My Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#purchases">Purchase History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#favorites">Favorites</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-3">
+                <div id="listings" class="tab-pane active">
+                    <div class="book-grid">
+                        {% for book in user_books %}
+                            {% include 'partials/book_card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="purchases" class="tab-pane fade">
+                    <div class="list-group">
+                        {% for transaction in purchase_history %}
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5>{{ transaction.book.title }}</h5>
+                                    <small>{{ transaction.created_at.strftime('%Y-%m-%d') }}</small>
+                                </div>
+                                <p>R{{ "%.2f"|format(transaction.amount) }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div id="favorites" class="tab-pane fade">
+                    <div class="book-grid">
+                        {% for book in favorite_books %}
+                            {% include 'partials/book_card.html' %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editProfileForm">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" value="{{ current_user.name }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ current_user.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Profile Picture</label>
+                        <input type="file" class="form-control" name="avatar" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('editProfileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+        const response = await fetch('/api/profile/update', {
+            method: 'POST',
+            body: formData
+        });
+        if (response.ok) {
+            location.reload();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+});
+</script>
+{% endblock %}
